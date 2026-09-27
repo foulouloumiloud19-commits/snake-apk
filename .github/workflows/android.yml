@@ -49,8 +49,12 @@ jobs:
 
       - name: Configure Buildozer
         run: |
-          sed -i 's/^# *p4a.branch = master/p4a.branch = develop/' buildozer.spec
-          sed -i 's/^# *android.accept_sdk_license = False/android.accept_sdk_license = True/' buildozer.spec
+          echo "p4a.branch = develop" >> buildozer.spec
+          echo "android.accept_sdk_license = True" >> buildozer.spec
+
+      - name: Prepare Android SDK
+        run: |
+          buildozer android p4a -- --help
 
       - name: Build APK
         run: |
@@ -61,3 +65,4 @@ jobs:
         with:
           name: fouloulou-centipede-apk
           path: bin/*.apk
+          if-no-files-found: error
