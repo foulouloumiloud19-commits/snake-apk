@@ -49,12 +49,33 @@ jobs:
 
       - name: Configure Buildozer
         run: |
-          sed -i 's/^# *android.accept_sdk_license = False/android.accept_sdk_license = True/' buildozer.spec
-          sed -i 's/^# *p4a.branch = master/p4a.branch = develop/' buildozer.spec
-          echo "android.accept_sdk_license = True" >> buildozer.spec
-          echo "p4a.branch = develop" >> buildozer.spec
+          python - <<'PY'
+          from pathlib import Path
 
-      - name: Download Android SDK NDK and p4a
+          p = Path("buildozer.spec")
+          s = p.read_text()
+
+          if "android.accept_sdk_license =" not in s:
+              s = s.replace(
+                  "[app]",
+                  "[app]\nandroid.accept_sdk_license = True",
+                  1
+              )
+
+          if "p4a.branch =" not in s:
+              s = s.replace(
+                  "[app]",
+                  "[app]\np4a.branch = develop",
+                  1
+              )
+
+          p.write_text(s)
+          PY
+
+          echo "===== BUILDOSER SETTINGS ====="
+          grep -E "android.accept_sdk_license|p4a.branch|android.api|android.ndk" buildozer.spec
+
+      - name: Prepare Android SDK, NDK and p4a
         run: |
           buildozer android p4a -- --help
 
