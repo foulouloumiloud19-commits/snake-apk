@@ -21,6 +21,10 @@ android.ndk = 29
 android.permissions = VIBRATE
 
 p4a.bootstrap = sdl2
+p4a.branch = develop
+p4a.local_recipes = ../../../../p4a-recipes
+
+android.accept_sdk_license = True
 android.debug_artifact = apk
 
 [buildozer]
